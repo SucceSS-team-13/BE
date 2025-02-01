@@ -18,16 +18,20 @@ public class SecurityConfig {
 
 
     private final String[] WHITE_LIST = new String[]{
-            "/swagger-ui/index.html",
-            "/swagger-ui/index.html#/"
-            ,"/swagger-ui.html"
-            ,"/swagger-ui/**"
-            ,"/api-docs/**"
-            ,"/v3/api-docs/**",
             "/api/auth/sign-up/**",
-            "/api/auth/sign-in",
+            "/api/auth/sign-in/**",
             "/error",
             "/api/auth/reissue"
+    };
+    private static final String[] SWAGGER_WHITELIST = {
+            "/swagger-ui/**", "/v3/api-docs/**"
+            ,"/swagger-ui.html"
+            ,"/swagger-ui/**"
+            ,"/api-docs/**",
+            "/v3/api-docs/**",
+            "v3/api-docs/**",
+            "/swagger-ui/**",
+            "swagger-ui/**"
     };
 
     @Bean
@@ -39,6 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests)->
                         authorizeRequests
                                 .requestMatchers(WHITE_LIST).permitAll()
+                                .requestMatchers(SWAGGER_WHITELIST).permitAll()
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .exceptionHandling((exception) ->

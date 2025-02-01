@@ -16,16 +16,14 @@ import org.antlr.v4.runtime.misc.NotNull;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name="member_id")
     private Long id;
 
+    @Column(name="social_id", unique = true)
+    private String socialId;
     @NotNull
-    private String email;
-    @NotNull
-    private String password;
-    @NotNull
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "nickname")
+    private String nickname;
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name="user_role")

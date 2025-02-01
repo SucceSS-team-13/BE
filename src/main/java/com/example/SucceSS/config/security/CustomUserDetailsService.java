@@ -18,15 +18,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return createUserDetails(memberRepository.findByEmail(email)
+    public UserDetails loadUserByUsername(String socialId) throws UsernameNotFoundException {
+        return createUserDetails(memberRepository.findBySocialId(socialId)
                 .orElseThrow(MemberNotFound::new));
     }
 
     public UserDetails createUserDetails(Member member) {
         UserDetails userDetails =  org.springframework.security.core.userdetails.User.builder()
-                .username(member.getEmail())
-                .password(member.getPassword())
+                .username(member.getSocialId())
+                .password(passwordEncoder.encode("KAKAO"))
                 .authorities(new SimpleGrantedAuthority(member.getUserRole().toString()))
                 .build();
         return userDetails;
