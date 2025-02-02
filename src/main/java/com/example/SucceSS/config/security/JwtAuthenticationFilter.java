@@ -4,6 +4,7 @@ import com.example.SucceSS.apiPayload.exception.NoAuthorizationHeaderException;
 import com.example.SucceSS.apiPayload.exception.NoBearerException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final static String EXPIRED = "expired";
     private final static String HEADER = "header";
     private final static String BEARER = "bearer";
+    private final static String SIGNATURE = "signature";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -37,13 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (MalformedJwtException e) {
-            request.setAttribute(EXCEPTION,MALFORMED);
+            request.setAttribute(EXCEPTION, MALFORMED);
         } catch (ExpiredJwtException e) {
             request.setAttribute(EXCEPTION, EXPIRED);
         } catch (NoAuthorizationHeaderException e) {
             request.setAttribute(EXCEPTION, HEADER);
         } catch (NoBearerException e) {
-            request.setAttribute(EXCEPTION,BEARER);
+            request.setAttribute(EXCEPTION, BEARER);
+        } catch(SignatureException e) {
+            request.setAttribute(EXCEPTION, SIGNATURE);
         } finally {
             filterChain.doFilter(request, response);
         }

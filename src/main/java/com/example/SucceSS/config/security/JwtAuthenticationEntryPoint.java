@@ -1,5 +1,7 @@
 package com.example.SucceSS.config.security;
 
+import com.example.SucceSS.apiPayload.ApiResponse;
+import com.example.SucceSS.apiPayload.status.ErrorStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.servlet.ServletException;
@@ -21,6 +23,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private final static String EXPIRED = "expired";
     private final static String HEADER = "header";
     private final static String BEARER = "bearer";
+    private final static String SIGNATURE = "signature";
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
@@ -31,21 +34,20 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         if(exception!=null) {
             switch (exception) {
-                case EXPIRED -> setResponse(response, HttpStatus.UNAUTHORIZED.value(), "만료된 토큰입니다");
-                case MALFORMED -> setResponse(response, HttpStatus.BAD_REQUEST.value(), "잘못된 형식의 토큰입니다");
-                case HEADER -> setResponse(response, HttpStatus.BAD_REQUEST.value(), "Authorization 헤더가 존재하지 않습니다.");
-                case LOGOUT -> setResponse(response, HttpStatus.BAD_REQUEST.value(), "로그아웃 처리된 토큰입니다.");
-                case BEARER -> setResponse(response, HttpStatus.BAD_REQUEST.value(), "Bearer 형식이 잘못됐습니다.");
+                case EXPIRED -> setResponse(response, ErrorStatus._EXPIRED_TOKEN.getCode(), "만료된 토큰입니다");
+                case MALFORMED -> setResponse(response, ErrorStatus._MALFORMED.getCode(), "잘못된 형식의 토큰입니다");
+                case HEADER -> setResponse(response, ErrorStatus._NO_HEADER.getCode(), "Authorization 헤더가 존재하지 않습니다.");
+                case LOGOUT -> setResponse(response, ErrorStatus._LOGOUT.getCode(), "로그아웃 처리된 토큰입니다.");
+                case BEARER -> setResponse(response, ErrorStatus._BEARER.getCode(), "Bearer 형식이 잘못됐습니다.");
+                case SIGNATURE -> setResponse(response, ErrorStatus._SIGNATURE.getCode(), "JWT signature가 유효하지 않습니다.");
             }
         }
     }
-    public void setResponse(HttpServletResponse response,int status,String msg) throws IOException {
-        ObjectNode json = new ObjectMapper().createObjectNode();
-        json.put("status",status);
-        json.put("success", false);
-        json.put("message", msg);
-        String newResponse = new ObjectMapper().writeValueAsString(json);
-        response.getWriter().write(newResponse);
-        response.setStatus(status);
+    public void setResponse(HttpServletResponse response,String code,String msg) throws IOException {
+        ApiResponse<Void> errorResponse = ApiResponse.onFailure(code, msg);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
     }
 }
