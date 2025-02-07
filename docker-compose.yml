@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  success13-redis:
+    container_name: success13-redis
+    build:
+      dockerfile: Dockerfile
+      context: ./redis
+    image: yujin748/success13-redis
+    ports:
+      - "6379:6379"
+  success13-database:
+    container_name: success13-database
+    build:
+      dockerfile: Dockerfile
+      context: ./database
+    image: yujin748/success13-database
+    environment:
+      - MYSQL_DATABASE=success13
+      - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    volumes:
+      - ./databases/config:/etc/mysql/conf.d
+    ports:
+      - "3306:3306"
