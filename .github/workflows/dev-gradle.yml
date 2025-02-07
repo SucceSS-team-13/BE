@@ -69,4 +69,5 @@ jobs:
           -e SPRING_DATASOURCE_URL=${{ secrets.DB_URL }} \
           -e SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }} \
           -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }} \
+          -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
           -d ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
