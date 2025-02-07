@@ -64,6 +64,13 @@ jobs:
             sudo docker stop ${{ secrets.PROJECT_NAME }} || true
             sudo docker rm ${{ secrets.PROJECT_NAME }} || true
           fi
+
+          # 2️⃣ 혹시라도 남아 있는 컨테이너 ID가 있으면 강제 삭제
+          EXISTING_CONTAINER_ID=$(docker ps -aq -f name=${{ secrets.PROJECT_NAME }})
+          if [ ! -z "$EXISTING_CONTAINER_ID" ]; then
+            echo "Force removing existing container..."
+            sudo docker rm -f $EXISTING_CONTAINER_ID || true
+          fi
           
           sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
