@@ -1,0 +1,35 @@
+package com.example.SucceSS.config.chat.Kafka;
+
+import com.example.SucceSS.web.dto.ChatDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+@Slf4j
+public class KafkaConsumer {
+    private final String USER_TOPIC = "/topic/user-request";
+    private final String AI_TOPIC = "/topic/ai-response";
+    private final String USER_GROUP = "/topic/ai-response";
+    private final String AI_GROUP = "/topic/ai-response";
+    private final SimpMessagingTemplate template;
+
+    @KafkaListener(groupId = USER_GROUP ,topics=USER_TOPIC)
+    public void listenUserChat(ChatDto chatDto){
+        // DB 저장
+        // 모델로 send
+    }
+
+    @KafkaListener(groupId = AI_GROUP ,topics=AI_TOPIC)
+    public void listenAiChat(ChatDto chatDto){
+        try {
+            template.convertAndSend("/chatRoom/"+chatDto.getChatRoomId(), chatDto);
+            log.info("sent message: {}", chatDto.getContent());
+        } catch (Exception e) {
+            log.error("Error sending message to WebSocket", e);
+        }
+    }
+}
