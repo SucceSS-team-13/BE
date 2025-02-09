@@ -17,9 +17,8 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class KafkaProducer {
     private final KafkaTemplate<String, ChatDto> kafkaTemplate;
-    private final String USER_TOPIC = "/topic/user-request";
-    private final String AI_TOPIC = "/topic/ai-response";
-    private final ChatRoomService chatRoomService;
+    private final String USER_TOPIC = "user-request";
+    private final String AI_TOPIC = "ai-response";
 
     public void sendMessageToUser(ChatDto dto) {
         CompletableFuture<SendResult<String, ChatDto>> completableFuture =
