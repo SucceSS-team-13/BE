@@ -36,3 +36,20 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/dockerd.sock:/var/run/docker.sock
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./data/db:/data/db
+  success-mongodb:
+    build:
+      dockerfile: Dockerfile
+      context: ./mongodb
+    image: success-mongodb
+    container_name: mongodbAtlas
+    environment:
+      MONGO_URI: ${MONGO_URI}
+    depends_on:
+      - mongodb
