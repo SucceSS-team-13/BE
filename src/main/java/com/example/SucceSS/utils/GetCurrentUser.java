@@ -20,4 +20,9 @@ public class GetCurrentUser {
                 .orElseThrow(MemberNotFound::new);
     }
 
+    public Member getCurrentUserByAuth(Authentication auth) {
+        return memberRepository.findBySocialId(auth.getName())
+                .orElseThrow(MemberNotFound::new);
+    }
+
 }

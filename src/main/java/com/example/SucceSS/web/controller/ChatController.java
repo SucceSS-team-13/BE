@@ -39,7 +39,8 @@ public class ChatController {
     // pub/chat/message 경로로 메세지 전송 : setApplicationDestinationPrefixes
     @MessageMapping("/chat/message")
     @Operation(summary = "웹소켓 메세지 전송")
-    public void sendSocketMessage(@Valid @RequestBody ChatDto chatDto){
-        //return ResponseEntity.ok(ApiResponse.onSuccess(chatRoomService.userSendChat(getCurrentUser.getCurrentUser())));
+    public ResponseEntity<ApiResponse<Void>> sendSocketMessage(@Valid @RequestBody ChatDto chatDto, Authentication auth){
+        chatService.userSendChat(chatDto, getCurrentUser.getCurrentUserByAuth(auth));
+        return ResponseEntity.ok(ApiResponse.onSuccess());
     }
 }
