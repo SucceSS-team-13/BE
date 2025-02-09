@@ -46,10 +46,10 @@ services:
   success-mongodb:
     build:
       dockerfile: Dockerfile
-      context: ./mongodb
+      context: .
     image: success-mongodb
     container_name: mongodbAtlas
     environment:
       MONGO_URI: ${MONGO_URI}
-    depends_on:
-      - mongodb
+    ports:
+      - '8081:8080'
