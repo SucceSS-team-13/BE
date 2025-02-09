@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -33,8 +31,19 @@ public class KafkaProducer {
         log.info("Produce message: {}", dto.getContent());
     }
 
-    public void sendMessageToAI() {
+    public void sendMessageToAI(ChatDto dto) {
         // jwt 검증 로직 필요
+
+        CompletableFuture<SendResult<String, ChatDto>> completableFuture =
+                kafkaTemplate.send(USER_TOPIC, dto).toCompletableFuture();
+
+        completableFuture
+                .thenAccept(result -> log.info("Successfully sent message: {}", dto.getContent()))
+                .exceptionally(ex -> {
+                    log.error("Failed to send message: {}", dto.getContent(), ex);
+                    return null;
+                });
+        log.info("Produce message: {}", dto.getContent());
     }
 
 
