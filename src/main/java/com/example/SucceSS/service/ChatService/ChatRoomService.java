@@ -36,6 +36,13 @@ public class ChatRoomService {
         return chatRoom.toResponse();
     }
 
+    @Transactional
+    // MongoDB 트랜잭션 설정 필요
+    public void deleteChatRoom(Long chatRoomId) {
+        chatRepository.deleteByChatRoomId(chatRoomId);
+        chatRoomRepository.deleteById(chatRoomId);
+    }
+
     private void sendFirstMessage(ChatRoom chatRoom) {
         ChatDto dto = ChatDto.toChatDto(chatRoom.getChatRoomId(),chatRoom.getMemberId(), "New Chat", "CHAT");
         producer.sendMessageToUser(dto);

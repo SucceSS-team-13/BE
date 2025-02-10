@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -36,8 +33,15 @@ public class ChatController {
         return ResponseEntity.ok(ApiResponse.onSuccess(chatRoomService.createChatRoom(getCurrentUser.getCurrentUser())));
     }
 
+    @DeleteMapping(value="/room/{chatRoomId}")
+    @Operation(summary = "채팅방 삭제")
+    public ResponseEntity<ApiResponse<Void>> deleteChatRoom(@PathVariable Long chatRoomId) {
+        chatRoomService.deleteChatRoom( chatRoomId);
+        return ResponseEntity.ok(ApiResponse.onSuccessWithMessage("채팅방 삭제 성공 : "+chatRoomId));
+    }
+
     // pub/chat/message 경로로 메세지 전송 : setApplicationDestinationPrefixes
-    @MessageMapping("/chat/message")
+    @MessageMapping(value = "/chat/message")
     @Operation(summary = "웹소켓 메세지 전송")
     public ResponseEntity<ApiResponse<Void>> sendSocketMessage(@Valid @RequestBody ChatDto chatDto, Authentication auth){
         chatService.userSendChat(chatDto, getCurrentUser.getCurrentUserByAuth(auth));
