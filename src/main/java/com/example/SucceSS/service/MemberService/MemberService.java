@@ -8,6 +8,9 @@ import com.example.SucceSS.repository.MemberRepository;
 import com.example.SucceSS.web.dto.MemberRequestDto;
 
 
+import com.example.SucceSS.repository.MemberRepository;
+import com.example.SucceSS.web.dto.ChatRoomResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -15,8 +18,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+
     private final JwtProvider jwtProvider;
 
     // 회원 정보 입력 + 결과 호출 로직 구현
@@ -78,5 +83,6 @@ public class MemberService {
 
         return message.toString();
     }
+
 
 }

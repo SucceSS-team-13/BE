@@ -4,6 +4,7 @@ import com.example.SucceSS.config.security.JwtProvider;
 import com.example.SucceSS.domain.Member;
 import com.example.SucceSS.repository.MemberRepository;
 import com.example.SucceSS.web.dto.KakaoAccountDto;
+import com.example.SucceSS.web.dto.LoginResponseDto;
 import com.example.SucceSS.web.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,15 +25,22 @@ public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional
-    public TokenDto signIn(String code) {
+    public LoginResponseDto signIn(String code) {
         KakaoAccountDto userInfo = kakaoService.getUserInfo(code);
+        boolean[] isNewMember = { false };
         Member member = memberRepository.findBySocialId(userInfo.getId().toString())
-                .orElseGet(()->saveMember(userInfo));
+                .orElseGet(() -> {
+                    isNewMember[0] = true;
+                    return saveMember(userInfo);
+                });
 
         Authentication authentication = setAuthentication(member.getSocialId(), "KAKAO");
-        System.out.println("done setting authentication");
-        TokenDto tokenDto = jwtProvider.generateToken(authentication);
-        return tokenDto;
+
+        LoginResponseDto loginResponseDto = isNewMember[0]
+                ? new LoginResponseDto(true)
+                : new LoginResponseDto(false);
+        loginResponseDto.setTokens(jwtProvider.generateToken(authentication));
+        return loginResponseDto;
     }
 
     @Transactional
