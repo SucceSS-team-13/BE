@@ -10,13 +10,12 @@ import com.example.SucceSS.web.dto.ChatRoomResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -36,8 +35,22 @@ public class ChatController {
         return ResponseEntity.ok(ApiResponse.onSuccess(chatRoomService.createChatRoom(getCurrentUser.getCurrentUser())));
     }
 
+    @DeleteMapping(value="/room/{chatRoomId}")
+    @Operation(summary = "채팅방 삭제")
+    public ResponseEntity<ApiResponse<Void>> deleteChatRoom(@PathVariable Long chatRoomId) {
+        chatRoomService.deleteChatRoom( chatRoomId);
+        return ResponseEntity.ok(ApiResponse.onSuccessWithMessage("채팅방 삭제 성공 : "+chatRoomId));
+    }
+
+    @GetMapping(value="/room/{chatRoomId}")
+    @Operation(summary = "채팅방 내역 불러오기")
+    public ResponseEntity<ApiResponse<Page<ChatDto>>> getChatPages(@PathVariable Long chatRoomId, Pageable pageable) {
+        return ResponseEntity.ok(
+                ApiResponse.onSuccess(chatRoomService.getChatPages(chatRoomId, pageable)));
+    }
+
     // pub/chat/message 경로로 메세지 전송 : setApplicationDestinationPrefixes
-    @MessageMapping("/chat/message")
+    @MessageMapping(value = "/chat/message")
     @Operation(summary = "웹소켓 메세지 전송")
     public ResponseEntity<ApiResponse<Void>> sendSocketMessage(@Valid @RequestBody ChatDto chatDto, Authentication auth){
         chatService.userSendChat(chatDto, getCurrentUser.getCurrentUserByAuth(auth));
