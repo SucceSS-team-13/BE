@@ -11,6 +11,8 @@ import com.example.SucceSS.web.dto.ChatDto;
 import com.example.SucceSS.web.dto.ChatRoomResponseDto;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +43,11 @@ public class ChatRoomService {
     public void deleteChatRoom(Long chatRoomId) {
         chatRepository.deleteByChatRoomId(chatRoomId);
         chatRoomRepository.deleteById(chatRoomId);
+    }
+
+    public Page<ChatDto> getChatPages(Long chatRoomId, Pageable pageable) {
+        return chatRepository.findByChatRoomId(chatRoomId, pageable)
+                .map(ChatDto::from);
     }
 
     private void sendFirstMessage(ChatRoom chatRoom) {

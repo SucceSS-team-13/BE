@@ -1,5 +1,6 @@
 package com.example.SucceSS.web.dto;
 
+import com.example.SucceSS.domain.Chat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,16 @@ public class ChatDto implements Serializable {
                 .content(content)
                 .sendDate(LocalDateTime.now())
                 .type(type)
+                .build();
+    }
+
+    public static ChatDto from(Chat chat) {
+        return ChatDto.builder()
+                .chatRoomId(chat.getChatRoomId())
+                .memberId(chat.getMemberId())
+                .sendDate(chat.getSendDate())
+                .content(chat.getContent())
+                .type(chat.getType())
                 .build();
     }
 }
