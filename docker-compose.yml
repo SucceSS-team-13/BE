@@ -54,6 +54,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://success.c9o2muimyf8j.ap-northeast-2.rds.amazonaws.com:3306/success
       SPRING_DATASOURCE_USERNAME: team13
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
     ports:
       - '8081:8080'
     depends_on:
