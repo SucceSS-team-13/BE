@@ -50,14 +50,15 @@ services:
     image: success-mongodb
     container_name: mongodbAtlas
     environment:
-      MONGO_URI: ${MONGO_URI}
+      SPRING_DATA_MONGODB_URI: ${SPRING_DATA_MONGODB_URI}
+      SPRING_DATA_MONGODB_DATABASE: ${SPRING_DATA_MONGODB_DATABASE}
       SPRING_DATASOURCE_URL: jdbc:mysql://success.c9o2muimyf8j.ap-northeast-2.rds.amazonaws.com:3306/success
       SPRING_DATASOURCE_USERNAME: team13
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
     ports:
       - '8081:8080'
     depends_on:
       - success13-database
-    restart: always
