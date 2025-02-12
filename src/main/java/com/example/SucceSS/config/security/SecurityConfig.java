@@ -21,7 +21,8 @@ public class SecurityConfig {
             "/api/auth/sign-up/**",
             "/api/auth/sign-in/**",
             "/error",
-            "/api/auth/reissue"
+            "/api/auth/reissue",
+            "/ws-chat/**"
     };
     private static final String[] SWAGGER_WHITELIST = {
             "/swagger-ui/**", "/v3/api-docs/**"

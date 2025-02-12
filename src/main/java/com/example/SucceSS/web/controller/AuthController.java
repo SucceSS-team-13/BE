@@ -3,6 +3,7 @@ package com.example.SucceSS.web.controller;
 import com.example.SucceSS.apiPayload.ApiResponse;
 import com.example.SucceSS.apiPayload.exception.MemberNotFound;
 import com.example.SucceSS.service.MemberService.AuthService;
+import com.example.SucceSS.web.dto.LoginResponseDto;
 import com.example.SucceSS.web.dto.TokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class AuthController {
     @Operation(summary = "카카오 로그인")
     @ResponseStatus(OK)
     @GetMapping("/sign-in/kakao")
-    public ResponseEntity<ApiResponse<TokenDto>> signInKakao(@RequestParam("code") String code) throws IOException {
+    public ResponseEntity<ApiResponse<LoginResponseDto>> signInKakao(@RequestParam("code") String code) throws IOException {
         return ResponseEntity.status(OK).body(ApiResponse.onSuccess(authService.signIn(code)));
     }
 
