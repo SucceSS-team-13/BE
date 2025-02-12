@@ -9,8 +9,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class MemberHobbyDto {
     private Hobby hobby;
     private DetailedHobby detailedHobby;

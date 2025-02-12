@@ -39,8 +39,8 @@ public enum DetailedHobby {
     // 영화 세부 취미
     ROMANCE("로맨스 영화", HobbyCategory.MOVIES),
     COMEDY("코미디 영화", HobbyCategory.MOVIES),
-    ACTION("액션 영화", HobbyCategory.MOVIES),
     THRILLER("스릴러 영화", HobbyCategory.MOVIES),
+    ACTION("액션 영화", HobbyCategory.MOVIES),
     HORROR("공포 영화", HobbyCategory.MOVIES),
     SF("SF 영화", HobbyCategory.MOVIES),
     FANTASY("판타지 영화", HobbyCategory.MOVIES),

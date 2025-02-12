@@ -24,10 +24,10 @@ public class MemberHobby {
     private Member member;
 
     @Enumerated(EnumType.STRING)
-    // @Column(nullable = false)
+    //@Column(nullable = false)
     private Hobby hobby;
 
     @Enumerated(EnumType.STRING)
-    // @Column(nullable = false)
+    //@Column(nullable = false)
     private DetailedHobby detailedHobby;
 }

@@ -13,12 +13,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberRequestDto {
-    // private String nickname;  // kakaoNickname 대신 nickname 사용
     private AgeGroup ageGroup;
     private String location;
     private PersonalityEnergy personalityEnergy;
     private PersonalityJudgement personalityJudgement;
     private List<MemberHobbyDto> hobbies;
-    /*private List<Hobby> hobby;
-    private List<DetailedHobby> detailedHobby;*/
 }
