@@ -27,13 +27,17 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    # Gradle 캐시 삭제 (기존 빌드 파일 제거)
+    - name: Remove Gradle Cache
+      run: rm -rf ~/.gradle/caches && rm -rf ~/.gradle/wrapper && rm -rf build
+
     # Gradle Build를 위한 권한 부여
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
     # Gradle Build (test 제외)
     - name: Build with Gradle
-      run: ./gradlew clean build --exclude-task test
+      run: ./gradlew clean build --exclude-task test --rerun-tasks
 
     # DockerHub 로그인
     - name: DockerHub Login
