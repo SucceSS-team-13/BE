@@ -13,13 +13,11 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    // 설문 조사 결과 저장
     @PatchMapping("/profile/update/{id}")
     public String saveMember(@PathVariable Long id, @RequestBody MemberRequestDto requestDto) {
-        Long userId = memberService.updateMember(id, requestDto);
+        memberService.updateMember(id, requestDto);
         return "사용자 정보가 저장되었습니다.";
     }
-
     // 사용자 정보 조회 및 결과 반환
     @GetMapping("/profile/{id}")
     public String getMemberAnalysis(@PathVariable Long id) {

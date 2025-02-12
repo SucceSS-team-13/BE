@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -23,7 +26,6 @@ public class Member extends BaseEntity {
     @Column(name="social_id", unique = true)
     private String socialId;
 
-    // @NotNull
     @Column(name = "nickname")
     private String nickname;
 
@@ -41,12 +43,9 @@ public class Member extends BaseEntity {
     private PersonalityEnergy personalityEnergy;
 
     @Enumerated(EnumType.STRING)
-    private PersonalityJudgement personalityJudegement;
+    private PersonalityJudgement personalityJudgement;
 
-    @Enumerated(EnumType.STRING)
-    private Hobby hobby;
-
-    @Enumerated(EnumType.STRING)
-    private DetailedHobby detailedHobby;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberHobby> memberHobbies = new ArrayList<>();
 
 }

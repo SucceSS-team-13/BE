@@ -1,13 +1,12 @@
 package com.example.SucceSS.web.dto;
 
-import com.example.SucceSS.domain.enums.AgeGroup;
-import com.example.SucceSS.domain.enums.Hobby;
-import com.example.SucceSS.domain.enums.PersonalityEnergy;
-import com.example.SucceSS.domain.enums.PersonalityJudgement;
+import com.example.SucceSS.domain.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,5 +19,6 @@ public class MemberResponseDto {
     private String location;
     private PersonalityEnergy personalityType_energy;
     private PersonalityJudgement personalityType_judgement;
-    private Hobby hobby;
+    private List<Hobby> hobby;
+    private List<DetailedHobby> detailed_hobby;
 }
