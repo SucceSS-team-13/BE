@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 public class KafkaConsumer {
     private final String USER_TOPIC = "user-request";
     private final String AI_TOPIC = "ai-response";
-    private final String USER_GROUP = "ai-response";
-    private final String AI_GROUP = "ai-response";
+    private final String USER_GROUP = "user-request-group";
+    private final String AI_GROUP = "ai-response-group";
     private final SimpMessagingTemplate template;
 
     @KafkaListener(groupId = USER_GROUP ,topics=USER_TOPIC , containerFactory = "aiResponseKafkaListenerContainerFactory")
