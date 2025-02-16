@@ -7,8 +7,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Getter
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class Chat {
     private Long chatRoomId;
     private Long memberId;
     private String content;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime sendDate;
     private String type;
 
@@ -30,7 +33,7 @@ public class Chat {
                 .type(dto.getType())
                 .content(dto.getContent())
                 .memberId(dto.getMemberId())
-                .sendDate(dto.getSendDate())
+                .sendDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
     }
 

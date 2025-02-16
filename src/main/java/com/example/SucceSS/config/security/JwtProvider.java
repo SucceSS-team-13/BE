@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtProvider {
     //access token 유효기간
-    private final long EXPIRE_TIME_ACCESS = 1000 * 60 * 60; //1시간
+    private final long EXPIRE_TIME_ACCESS = 1000 * 60 * 60*24; //1시간
     private final long EXPIRE_TIME_REFRESH = 1000 * 60 * 60 * 24 * 7; //1주일
     private final SecretKey key;
     public JwtProvider(@Value("${jwt.secret}") String secretKey) {
