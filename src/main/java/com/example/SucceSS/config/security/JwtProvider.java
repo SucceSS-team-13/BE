@@ -66,9 +66,7 @@ public class JwtProvider {
     public Authentication getAuthentication(String token) {
         // 토큰 복호화
         Claims claims = parseClaims(token);
-        if (claims.get("auth") == null) {
-            //throw new NoAuthAccessTokenException();
-        }
+
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get("auth").toString().split(","))
                         .map(SimpleGrantedAuthority::new)
@@ -90,5 +88,6 @@ public class JwtProvider {
     public Long getExpiration(String bearerToken) {
         return parseClaims(bearerToken).getExpiration().getTime()-(new Date()).getTime();
     }
+
 
 }
