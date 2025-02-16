@@ -19,8 +19,11 @@ public class ChatService {
     @Transactional
     public void userSendChat(ChatDto chatDto, Member member) {
         chatRepository.save(Chat.of(chatDto));
-
+        // 굳이 발행하지 않고 모델로 send 하는 코드 넣으면 될 듯
         producer.sendMessageToAI(chatDto);
+        // webClient.send(dto)로 받은 결과물을 -> producer.sendMessageToUser
+
+
     }
 
 }

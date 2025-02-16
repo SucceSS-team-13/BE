@@ -32,8 +32,6 @@ public class KafkaProducer {
     }
 
     public void sendMessageToAI(ChatDto dto) {
-        // jwt 검증 로직 필요
-
         CompletableFuture<SendResult<String, ChatDto>> completableFuture =
                 kafkaTemplate.send(USER_TOPIC, dto).toCompletableFuture();
 

@@ -19,12 +19,10 @@ public class KafkaConsumer {
 
     @KafkaListener(groupId = USER_GROUP ,topics=USER_TOPIC , containerFactory = "aiResponseKafkaListenerContainerFactory")
     public void listenUserChat(ChatDto chatDto){
-        // DB 저장
         // 모델로 send
         try {
-
             template.convertAndSend("/topic/chatRoom/"+chatDto.getChatRoomId(), chatDto);
-            log.info("sent message: {}", chatDto.getContent());
+            log.info("get message: {}", chatDto.getContent());
         } catch (Exception e) {
             log.error("Error sending message to WebSocket", e);
         }
@@ -32,6 +30,7 @@ public class KafkaConsumer {
 
     @KafkaListener(groupId = AI_GROUP ,topics=AI_TOPIC, containerFactory = "userRequestKafkaListenerContainerFactory")
     public void listenAiChat(ChatDto chatDto){
+        // ML에서 받은 응답 전송
         try {
             template.convertAndSend("/topic/chatRoom/"+chatDto.getChatRoomId(), chatDto);
             log.info("sent message: {}", chatDto.getContent());

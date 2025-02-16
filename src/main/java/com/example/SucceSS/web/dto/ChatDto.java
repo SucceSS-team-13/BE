@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,7 +37,7 @@ public class ChatDto implements Serializable {
         return ChatDto.builder()
                 .chatRoomId(chat.getChatRoomId())
                 .memberId(chat.getMemberId())
-                .sendDate(chat.getSendDate())
+                .sendDate(chat.getSendDate().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime())
                 .content(chat.getContent())
                 .type(chat.getType())
                 .build();

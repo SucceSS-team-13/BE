@@ -31,13 +31,7 @@ public class StompErrorHandler extends StompSubProtocolErrorHandler {
         if (ex instanceof MessageDeliveryException) {
             Throwable cause = ex.getCause();
             log.error("Error occurred ", cause);
-            if (cause instanceof ExpiredJwtException) {
-                return sendErrorMessage(ApiResponse.onFailure(ErrorStatus._EXPIRED_TOKEN.getCode(), ErrorStatus._EXPIRED_TOKEN.getMessage()), ex);
-            } else if (cause instanceof MalformedJwtException) {
-                return sendErrorMessage(ApiResponse.onFailure(ErrorStatus._MALFORMED.getCode(), ErrorStatus._MALFORMED.getMessage()), ex);
-            } else {
-                return sendErrorMessage(ApiResponse.onFailure(ErrorStatus._INTERNAL_SERVER_ERROR.getCode(), ErrorStatus._INTERNAL_SERVER_ERROR.getMessage()), ex);
-            }
+            return sendErrorMessage(ApiResponse.onFailure(ErrorStatus._INTERNAL_SERVER_ERROR.getCode(), ErrorStatus._INTERNAL_SERVER_ERROR.getMessage()), ex);
         }
         return super.handleClientMessageProcessingError(clientMessage, ex);
     }
