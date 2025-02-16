@@ -13,7 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.MessageDeliveryException;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,8 +62,14 @@ public class ChatController {
     // pub/chat/message 경로로 메세지 전송 : setApplicationDestinationPrefixes
     @MessageMapping(value = "/chat/message")
     @Operation(summary = "웹소켓 메세지 전송")
-    public ResponseEntity<ApiResponse<Void>> sendSocketMessage(@Valid @RequestBody ChatDto chatDto, Authentication auth){
-        chatService.userSendChat(chatDto, getCurrentUser.getCurrentUserByAuth(auth));
-        return ResponseEntity.ok(ApiResponse.onSuccess());
+    public ResponseEntity<ApiResponse<Void>> sendSocketMessage(@Valid @RequestBody ChatDto chatDto,
+                                                               SimpMessageHeaderAccessor accessor){
+        try {
+            chatService.userSendChat(chatDto, getCurrentUser.getCurrentUserByAccessor(accessor));
+            return ResponseEntity.ok(ApiResponse.onSuccess());
+        } catch (Exception e) {
+            throw new MessageDeliveryException(e.getMessage());
+        }
+
     }
 }

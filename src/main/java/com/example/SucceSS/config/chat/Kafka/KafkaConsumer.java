@@ -22,10 +22,9 @@ public class KafkaConsumer {
         // DB 저장
         // 모델로 send
         try {
-            /*
+
             template.convertAndSend("/topic/chatRoom/"+chatDto.getChatRoomId(), chatDto);
             log.info("sent message: {}", chatDto.getContent());
-             */
         } catch (Exception e) {
             log.error("Error sending message to WebSocket", e);
         }
