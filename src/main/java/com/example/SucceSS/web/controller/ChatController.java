@@ -49,6 +49,13 @@ public class ChatController {
                 ApiResponse.onSuccess(chatRoomService.getChatPages(chatRoomId, pageable)));
     }
 
+    @GetMapping(value = "/rooms")
+    @Operation(summary = "채팅방 목록 불러오기")
+    public ResponseEntity<ApiResponse<Page<ChatRoomResponseDto>>> getChatRoomPages(Pageable pageable) {
+        return ResponseEntity.ok(
+                ApiResponse.onSuccess(chatRoomService.getChatRoomPages(getCurrentUser.getCurrentUser(), pageable)));
+    }
+
     // pub/chat/message 경로로 메세지 전송 : setApplicationDestinationPrefixes
     @MessageMapping(value = "/chat/message")
     @Operation(summary = "웹소켓 메세지 전송")

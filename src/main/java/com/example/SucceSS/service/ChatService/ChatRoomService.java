@@ -12,7 +12,9 @@ import com.example.SucceSS.web.dto.ChatRoomResponseDto;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +57,17 @@ public class ChatRoomService {
         producer.sendMessageToUser(dto);
 
         chatRepository.save(Chat.of(dto));
+    }
+
+    public Page<ChatRoomResponseDto> getChatRoomPages(Member member, Pageable pageable) {
+        return chatRoomRepository.findByMemberId(member.getId()
+                , getChatRoomPageableWithSort(pageable));
+    }
+
+    private Pageable getChatRoomPageableWithSort(Pageable pageable) {
+        // 생각해볼 기능 : 메세지 전송 시 updatedAt 갱신하고 이를 기준으로 정렬하기 가능
+        return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()
+                , Sort.by(Sort.Direction.ASC,"createdAt"));
     }
 
 }

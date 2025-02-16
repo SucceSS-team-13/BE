@@ -1,5 +1,6 @@
 package com.example.SucceSS.domain;
 
+import com.example.SucceSS.domain.common.BaseEntity;
 import com.example.SucceSS.web.dto.ChatRoomResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoom {
+public class ChatRoom extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
