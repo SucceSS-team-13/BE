@@ -36,7 +36,7 @@ public class ChatRoomService {
 
         chatRoomRepository.save(chatRoom);
 
-        sendFirstMessage(chatRoom);
+        //sendFirstMessage(chatRoom);
         return chatRoom.toResponse();
     }
 
@@ -52,15 +52,17 @@ public class ChatRoomService {
                 .map(ChatDto::from);
     }
 
+    /*
     private void sendFirstMessage(ChatRoom chatRoom) {
         ChatDto dto = ChatDto.toChatDto(chatRoom.getChatRoomId(),chatRoom.getMemberId(), "New Chat", "CHAT");
         producer.sendMessageToUser(dto);
 
         chatRepository.save(Chat.of(dto));
     }
+     */
 
     public Page<ChatRoomResponseDto> getChatRoomPages(Member member, Pageable pageable) {
-        return chatRoomRepository.findByMemberId(member.getId()
+        return chatRoomRepository.getPagesByMemberId(member.getId()
                 , getChatRoomPageableWithSort(pageable));
     }
 

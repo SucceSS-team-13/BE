@@ -2,6 +2,7 @@ package com.example.SucceSS.web.dto;
 
 import com.example.SucceSS.domain.Chat;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,21 +16,25 @@ import java.time.ZoneId;
 @NoArgsConstructor
 @Getter
 @Builder
-public class ChatDto implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ChatDto {
     private Long chatRoomId;
     private Long memberId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime sendDate;
     private String content;
-    private String type;
+    private String location;
 
-    public static ChatDto toChatDto(Long chatRoomId, Long memberId, String content, String type) {
+    public void setOptionalLocation(String location) {
+        this.location = location;
+    }
+
+    public static ChatDto toChatDto(Long chatRoomId, Long memberId, String content) {
         return ChatDto.builder()
                 .chatRoomId(chatRoomId)
                 .memberId(memberId)
                 .content(content)
                 .sendDate(LocalDateTime.now())
-                .type(type)
                 .build();
     }
 
@@ -39,7 +44,6 @@ public class ChatDto implements Serializable {
                 .memberId(chat.getMemberId())
                 .sendDate(chat.getSendDate().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime())
                 .content(chat.getContent())
-                .type(chat.getType())
                 .build();
     }
 }

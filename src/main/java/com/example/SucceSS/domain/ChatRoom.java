@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Builder
 @Getter
@@ -31,6 +33,10 @@ public class ChatRoom extends BaseEntity {
                 .memberId(this.memberId)
                 .title(this.title)
                 .build();
+    }
+
+    public void updatedAt(LocalDateTime updatedAt) {
+        this.updatedAt(updatedAt);
     }
 
 }
