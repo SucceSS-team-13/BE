@@ -1,13 +1,10 @@
 package com.example.SucceSS.service.ChatService;
 
-import com.example.SucceSS.config.chat.Kafka.KafkaProducer;
-import com.example.SucceSS.domain.Chat;
 import com.example.SucceSS.domain.ChatRoom;
 import com.example.SucceSS.domain.Member;
 import com.example.SucceSS.repository.ChatRepository;
 import com.example.SucceSS.repository.ChatRoomRepository;
-import com.example.SucceSS.repository.MemberRepository;
-import com.example.SucceSS.web.dto.ChatDto;
+import com.example.SucceSS.web.dto.ChatResponseDto;
 import com.example.SucceSS.web.dto.ChatRoomResponseDto;
 import lombok.RequiredArgsConstructor;
 
@@ -22,10 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ChatRoomService {
 
-    private final MemberRepository memberRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRepository chatRepository;
-    private final KafkaProducer producer;
 
     @Transactional
     public ChatRoomResponseDto createChatRoom(Member member) {
@@ -41,15 +36,15 @@ public class ChatRoomService {
     }
 
     @Transactional
-    // MongoDB 트랜잭션 설정 필요
     public void deleteChatRoom(Long chatRoomId) {
         chatRepository.deleteByChatRoomId(chatRoomId);
         chatRoomRepository.deleteById(chatRoomId);
     }
 
-    public Page<ChatDto> getChatPages(Long chatRoomId, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public Page<ChatResponseDto> getChatPages(Long chatRoomId, Pageable pageable) {
         return chatRepository.findByChatRoomId(chatRoomId, pageable)
-                .map(ChatDto::from);
+                .map(ChatResponseDto::fromWithoutLocation);
     }
 
     /*
@@ -61,15 +56,15 @@ public class ChatRoomService {
     }
      */
 
+    @Transactional(readOnly = true)
     public Page<ChatRoomResponseDto> getChatRoomPages(Member member, Pageable pageable) {
         return chatRoomRepository.getPagesByMemberId(member.getId()
                 , getChatRoomPageableWithSort(pageable));
     }
 
     private Pageable getChatRoomPageableWithSort(Pageable pageable) {
-        // 생각해볼 기능 : 메세지 전송 시 updatedAt 갱신하고 이를 기준으로 정렬하기 가능
         return PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()
-                , Sort.by(Sort.Direction.ASC,"createdAt"));
+                , Sort.by(Sort.Direction.DESC,"updatedAt"));
     }
 
 }

@@ -1,23 +1,15 @@
 package com.example.SucceSS.config.chat.Kafka;
 
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.KafkaAdminClient;
-import org.apache.kafka.clients.admin.NewTopic;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
-
-import java.util.List;
-import java.util.Properties;
 
 @Configuration
-@EnableKafka
 public class KafkaConfig {
+    /*
 
     @Value("${spring.kafka.bootstrap-servers}")
     private static String bootstrapServers;
 
-    /**
+
      // 토픽 이름 설정
     private final String request = "user-request";
     private final String response = "ai-response";
@@ -30,7 +22,6 @@ public class KafkaConfig {
             new NewTopic(response, 100, (short) 1)
         );
     }
-     **/
 
     public static void main(String[] args) {
         Properties props = new Properties();
@@ -45,4 +36,6 @@ public class KafkaConfig {
             System.out.println(adminClient.listTopics());
         }
     }
+
+     */
 }

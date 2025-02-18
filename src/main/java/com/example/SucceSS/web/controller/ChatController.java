@@ -5,7 +5,8 @@ import com.example.SucceSS.service.ChatService.ChatRoomService;
 import com.example.SucceSS.service.ChatService.ChatService;
 import com.example.SucceSS.service.MemberService.MemberService;
 import com.example.SucceSS.utils.GetCurrentUser;
-import com.example.SucceSS.web.dto.ChatDto;
+import com.example.SucceSS.web.dto.ChatResponseDto;
+import com.example.SucceSS.web.dto.ChatRequestDto;
 import com.example.SucceSS.web.dto.ChatRoomResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -42,7 +43,7 @@ public class ChatController {
 
     @GetMapping(value="/room/{chatRoomId}")
     @Operation(summary = "채팅방 내역 불러오기")
-    public ResponseEntity<ApiResponse<Page<ChatDto>>> getChatPages(@PathVariable Long chatRoomId, Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<ChatResponseDto>>> getChatPages(@PathVariable Long chatRoomId, Pageable pageable) {
         return ResponseEntity.ok(
                 ApiResponse.onSuccess(chatRoomService.getChatPages(chatRoomId, pageable)));
     }
@@ -57,7 +58,8 @@ public class ChatController {
 
     @PostMapping()
     @Operation(summary = "유저 채팅 전송")
-    public ResponseEntity<ApiResponse<ChatDto>> sendMessage(@Valid @RequestBody ChatDto chatDto){
-        return ResponseEntity.ok(ApiResponse.onSuccess(chatService.userSendChat(chatDto, getCurrentUser.getCurrentUser())));
+    public ResponseEntity<ApiResponse<ChatResponseDto>> sendMessage(@Valid @RequestBody ChatRequestDto chatDto){
+        return ResponseEntity.ok(ApiResponse.onSuccess(
+                chatService.userSendChat(chatDto, getCurrentUser.getCurrentUser())));
     }
 }

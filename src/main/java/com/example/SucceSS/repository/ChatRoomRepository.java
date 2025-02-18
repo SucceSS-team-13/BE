@@ -13,10 +13,10 @@ import java.util.Optional;
 
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
-    @Query("SELECT new com.example.SucceSS.web.dto.ChatRoomResponseDto(c.chatRoomId, c.memberId, c.title) " +
+    @Query("SELECT new com.example.SucceSS.web.dto.ChatRoomResponseDto(c.chatRoomId, c.memberId, c.title, c.updatedAt) " +
             "FROM ChatRoom c " +
             "WHERE c.memberId = :memberId")
     Page<ChatRoomResponseDto> getPagesByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 
-    Optional<ChatRoom> findByMemberId(Long memberId);
+    Optional<ChatRoom> findByChatRoomId(Long chatRoomId);
 }

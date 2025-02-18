@@ -8,42 +8,47 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ChatDto {
+public class ChatResponseDto {
     private Long chatRoomId;
     private Long memberId;
+    private Long id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime sendDate;
-    private String content;
+    private String text;
+    private String sender;
     private String location;
 
     public void setOptionalLocation(String location) {
         this.location = location;
     }
+    public void selectSender(String sender) { this.sender = sender; }
 
-    public static ChatDto toChatDto(Long chatRoomId, Long memberId, String content) {
-        return ChatDto.builder()
+    public static ChatResponseDto toChatDto(Long chatRoomId, Long id, Long memberId, String content, String sender) {
+        return ChatResponseDto.builder()
                 .chatRoomId(chatRoomId)
+                .id(id)
                 .memberId(memberId)
-                .content(content)
+                .text(content)
                 .sendDate(LocalDateTime.now())
+                .sender(sender)
                 .build();
     }
 
-    public static ChatDto from(Chat chat) {
-        return ChatDto.builder()
+    public static ChatResponseDto fromWithoutLocation(Chat chat) {
+        return ChatResponseDto.builder()
                 .chatRoomId(chat.getChatRoomId())
                 .memberId(chat.getMemberId())
-                .sendDate(chat.getSendDate().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime())
-                .content(chat.getContent())
+                .id(chat.getChatId())
+                .sendDate(chat.getSendDate())
+                .text(chat.getText())
+                .sender(chat.getSender())
                 .build();
     }
 }

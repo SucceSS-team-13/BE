@@ -1,30 +1,15 @@
 package com.example.SucceSS.config.chat;
 
-import com.example.SucceSS.apiPayload.ApiResponse;
-import com.example.SucceSS.apiPayload.exception.NoAuthorizationHeaderException;
-import com.example.SucceSS.apiPayload.exception.NoBearerException;
-import com.example.SucceSS.apiPayload.status.ErrorStatus;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageDeliveryException;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
 
-import java.nio.charset.StandardCharsets;
 
 @ControllerAdvice
 @Slf4j
 @RequiredArgsConstructor
-public class StompErrorHandler extends StompSubProtocolErrorHandler {
+public class StompErrorHandler  {
+    /*
     private final ObjectMapper objectMapper;
     @Override
     public Message<byte[]> handleClientMessageProcessingError(Message<byte[]> clientMessage, Throwable ex) {
@@ -51,4 +36,6 @@ public class StompErrorHandler extends StompSubProtocolErrorHandler {
                     headers.getMessageHeaders());
         }
     }
+
+     */
 }

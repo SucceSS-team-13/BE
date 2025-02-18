@@ -1,17 +1,14 @@
 package com.example.SucceSS.domain;
 
 import com.example.SucceSS.domain.common.BaseEntity;
-import com.example.SucceSS.web.dto.ChatDto;
+import com.example.SucceSS.web.dto.ChatRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Getter
 @AllArgsConstructor
@@ -27,16 +24,18 @@ public class Chat extends BaseEntity {
     private Long chatRoomId;
     @Column(name="member_id", nullable = false)
     private Long memberId;
-    private String content;
+    private String text;
     private LocalDateTime sendDate;
     private String location;
+    private String sender;
 
-    public static Chat of(ChatDto dto) {
+    public static Chat of(ChatRequestDto dto, Long memberId) {
         return Chat.builder()
                 .chatRoomId(dto.getChatRoomId())
-                .content(dto.getContent())
-                .memberId(dto.getMemberId())
-                .sendDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .text(dto.getText())
+                .memberId(memberId)
+                .sendDate(LocalDateTime.now())
+                .sender("user")
                 .build();
     }
 
