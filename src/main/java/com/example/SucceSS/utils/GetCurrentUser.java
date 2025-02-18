@@ -5,7 +5,6 @@ import com.example.SucceSS.config.security.JwtProvider;
 import com.example.SucceSS.domain.Member;
 import com.example.SucceSS.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -28,10 +27,12 @@ public class GetCurrentUser {
                 .orElseThrow(MemberNotFound::new);
     }
 
+    /*
     public Member getCurrentUserByAccessor(SimpMessageHeaderAccessor accessor) {
         Authentication auth = (Authentication) accessor.getSessionAttributes().get("auth");
         return memberRepository.findBySocialId(auth.getName())
                 .orElseThrow(MemberNotFound::new);
     }
+     */
 
 }

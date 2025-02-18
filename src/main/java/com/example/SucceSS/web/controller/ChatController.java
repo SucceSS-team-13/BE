@@ -5,7 +5,8 @@ import com.example.SucceSS.service.ChatService.ChatRoomService;
 import com.example.SucceSS.service.ChatService.ChatService;
 import com.example.SucceSS.service.MemberService.MemberService;
 import com.example.SucceSS.utils.GetCurrentUser;
-import com.example.SucceSS.web.dto.ChatDto;
+import com.example.SucceSS.web.dto.ChatResponseDto;
+import com.example.SucceSS.web.dto.ChatRequestDto;
 import com.example.SucceSS.web.dto.ChatRoomResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -13,11 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.MessageDeliveryException;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -47,7 +43,7 @@ public class ChatController {
 
     @GetMapping(value="/room/{chatRoomId}")
     @Operation(summary = "채팅방 내역 불러오기")
-    public ResponseEntity<ApiResponse<Page<ChatDto>>> getChatPages(@PathVariable Long chatRoomId, Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<ChatResponseDto>>> getChatPages(@PathVariable Long chatRoomId, Pageable pageable) {
         return ResponseEntity.ok(
                 ApiResponse.onSuccess(chatRoomService.getChatPages(chatRoomId, pageable)));
     }
@@ -59,17 +55,11 @@ public class ChatController {
                 ApiResponse.onSuccess(chatRoomService.getChatRoomPages(getCurrentUser.getCurrentUser(), pageable)));
     }
 
-    // pub/chat/message 경로로 메세지 전송 : setApplicationDestinationPrefixes
-    @MessageMapping(value = "/chat/message")
-    @Operation(summary = "웹소켓 메세지 전송")
-    public ResponseEntity<ApiResponse<Void>> sendSocketMessage(@Valid @RequestBody ChatDto chatDto,
-                                                               SimpMessageHeaderAccessor accessor){
-        try {
-            chatService.userSendChat(chatDto, getCurrentUser.getCurrentUserByAccessor(accessor));
-            return ResponseEntity.ok(ApiResponse.onSuccess());
-        } catch (Exception e) {
-            throw new MessageDeliveryException(e.getMessage());
-        }
 
+    @PostMapping()
+    @Operation(summary = "유저 채팅 전송")
+    public ResponseEntity<ApiResponse<ChatResponseDto>> sendMessage(@Valid @RequestBody ChatRequestDto chatDto){
+        return ResponseEntity.ok(ApiResponse.onSuccess(
+                chatService.userSendChat(chatDto, getCurrentUser.getCurrentUser())));
     }
 }

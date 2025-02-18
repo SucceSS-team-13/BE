@@ -8,12 +8,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoom extends BaseEntity {
+public class ChatRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +28,23 @@ public class ChatRoom extends BaseEntity {
 
     private String title;
 
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public ChatRoomResponseDto toResponse() {
         return ChatRoomResponseDto.builder()
                 .chatRoomId(this.chatRoomId)
@@ -32,5 +52,10 @@ public class ChatRoom extends BaseEntity {
                 .title(this.title)
                 .build();
     }
+
+    public void setUpdatedDate(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+    public void updateChatRoomTitle(String title) { this.title = title; }
 
 }
