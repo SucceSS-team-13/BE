@@ -30,10 +30,9 @@ public class ChatResponseDto {
     }
     public void selectSender(String sender) { this.sender = sender; }
 
-    public static ChatResponseDto toChatDto(Long chatRoomId, Long id, Long memberId, String content, String sender) {
+    public static ChatResponseDto toChatDto(Long chatRoomId, Long memberId, String content, String sender) {
         return ChatResponseDto.builder()
                 .chatRoomId(chatRoomId)
-                .id(id)
                 .memberId(memberId)
                 .text(content)
                 .sendDate(LocalDateTime.now())

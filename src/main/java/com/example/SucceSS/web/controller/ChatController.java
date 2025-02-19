@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -58,7 +60,7 @@ public class ChatController {
 
     @PostMapping()
     @Operation(summary = "유저 채팅 전송")
-    public ResponseEntity<ApiResponse<ChatResponseDto>> sendMessage(@Valid @RequestBody ChatRequestDto chatDto){
+    public ResponseEntity<ApiResponse<ChatResponseDto>> sendMessage(@Valid @RequestBody ChatRequestDto chatDto) throws IOException {
         return ResponseEntity.ok(ApiResponse.onSuccess(
                 chatService.userSendChat(chatDto, getCurrentUser.getCurrentUser())));
     }
