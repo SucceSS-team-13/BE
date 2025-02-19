@@ -19,6 +19,6 @@ public class MemberResponseDto {
     private String location;
     private PersonalityEnergy personalityType_energy;
     private PersonalityJudgement personalityType_judgement;
-    private List<Hobby> hobby;
-    private List<DetailedHobby> detailed_hobby;
+    private List<MemberHobbyDto> hobbies;
+    private String message;
 }
