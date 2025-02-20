@@ -71,4 +71,5 @@ jobs:
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
             -e HUGGINGFACE_API_KEY=${{ secrets.HUGGINGFACE_API_KEY }} \
             -e HUGGINGFACE_API_URL=${{ secrets.HUGGINGFACE_API_URL }} \
+            -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} \
             -d ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
