@@ -64,8 +64,8 @@ jobs:
         key: ${{ secrets.EC2_KEY }}
 
         script: |
-            sudo docker stop $EXISTING_CONTAINER_ID || true
-            sudo docker rm -f $EXISTING_CONTAINER_ID || true
+          sudo docker stop $EXISTING_CONTAINER_ID || true
+          sudo docker rm -f $EXISTING_CONTAINER_ID || true
           
           sudo docker run --pull always -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
           --name ${{ secrets.PROJECT_NAME }} \
