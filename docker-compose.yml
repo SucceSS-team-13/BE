@@ -15,10 +15,10 @@ services:
 
   success13-database:
     container_name: success13-database
-    build:
-      dockerfile: Dockerfile
-      context: ./database
-    # image: yujin748/success13-database
+    image: yujin748/success13-database
+    #build:
+       #dockerfile: Dockerfile
+       #context: ./database
     environment:
       - MYSQL_DATABASE=success13
       - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
