@@ -69,4 +69,5 @@ jobs:
             -e SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }} \
             -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }} \
             -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            -e HUGGINGFACE_API_KEY=${{ secrets.HUGGINGFACE_API_KEY }} \
             -d ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
