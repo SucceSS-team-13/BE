@@ -12,13 +12,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberResponseDto {
-    private Long memberId;
-    private String nickname;
-    private AgeGroup age;
+public class MemberRequestDto {
+    private AgeGroup ageGroup;
     private String location;
-    private PersonalityEnergy personalityType_energy;
-    private PersonalityJudgement personalityType_judgement;
+    private PersonalityEnergy personalityEnergy;
+    private PersonalityJudgement personalityJudgement;
     private List<MemberHobbyDto> hobbies;
-    private String message;
 }
