@@ -13,4 +13,5 @@ public interface ChatRepository extends JpaRepository<Chat, String> {
     void deleteByChatRoomId(Long chatRoomId);
     Page<Chat> findByChatRoomId(Long chatRoomId, Pageable pageable);
     Optional<Chat> findByChatRoomId(Long chatRoomId);
+    boolean existsByChatRoomId(Long chatRoomId);
 }

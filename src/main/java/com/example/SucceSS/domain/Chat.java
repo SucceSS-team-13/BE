@@ -24,6 +24,7 @@ public class Chat extends BaseEntity {
     private Long chatRoomId;
     @Column(name="member_id", nullable = false)
     private Long memberId;
+    @Column(name="text", columnDefinition = "LONGTEXT")
     private String text;
     private LocalDateTime sendDate;
     private String location;
@@ -39,4 +40,13 @@ public class Chat extends BaseEntity {
                 .build();
     }
 
+    public static Chat of(Long chatRoomId, Long memberId, String text, String sender) {
+        return Chat.builder()
+                .chatRoomId(chatRoomId)
+                .text(text)
+                .memberId(memberId)
+                .sendDate(LocalDateTime.now())
+                .sender(sender)
+                .build();
+    }
 }
