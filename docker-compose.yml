@@ -1,19 +1,24 @@
 version: "3.8"
 services:
-  success13-redis:
-    container_name: success13-redis
-    build:
-      dockerfile: Dockerfile
-      context: ./redis
-    image: yujin748/success13-redis
+  app:
+    build: .
+    container_name: success13
     ports:
-      - "6379:6379"
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://success.c9o2muimyf8j.ap-northeast-2.rds.amazonaws.com:3306/success
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    depends_on:
+      - success13-database
+    restart: always
+
   success13-database:
     container_name: success13-database
-    build:
-      dockerfile: Dockerfile
-      context: ./database
     image: yujin748/success13-database
+    #build:
+       #dockerfile: Dockerfile
+       #context: ./database
     environment:
       - MYSQL_DATABASE=success13
       - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
@@ -21,48 +26,4 @@ services:
       - ./databases/config:/etc/mysql/conf.d
     ports:
       - "3307:3306"
-  zookeeper:
-    image: wurstmeister/zookeeper
-    container_name: zookeeper
-    ports:
-      - '2181:2181'
-  kafka:
-    image: wurstmeister/kafka
-    container_name: kafka
-    ports:
-      - "9092:9092"
-      - "29092:29092"
-    environment:
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092, PLAINTEXT_EC2://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092, PLAINTEXT_EC2://${EIP}:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT, PLAINTEXT_EC2:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-    volumes:
-      - /var/run/dockerd.sock:/var/run/docker.sock
-  mongodb:
-    image: mongo
-    container_name: mongodb
-    ports:
-      - '27017:27017'
-    volumes:
-      - ./data/db:/data/db
-  success-mongodb:
-    build:
-      dockerfile: Dockerfile
-      context: .
-    image: success-mongodb
-    container_name: mongodbAtlas
-    environment:
-      SPRING_DATA_MONGODB_URI: ${SPRING_DATA_MONGODB_URI}
-      SPRING_DATA_MONGODB_DATABASE: ${SPRING_DATA_MONGODB_DATABASE}
-      SPRING_DATASOURCE_URL: jdbc:mysql://success.c9o2muimyf8j.ap-northeast-2.rds.amazonaws.com:3306/success
-      SPRING_DATASOURCE_USERNAME: team13
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
-      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
-    ports:
-      - '8081:8080'
-    depends_on:
-      - success13-database
+
