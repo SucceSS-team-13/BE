@@ -45,7 +45,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PersonalityJudgement personalityJudgement;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberHobby> memberHobbies = new ArrayList<>();
 
 }
