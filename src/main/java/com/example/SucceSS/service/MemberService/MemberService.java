@@ -1,21 +1,26 @@
 package com.example.SucceSS.service.MemberService;
 
+import com.example.SucceSS.apiPayload.ApiResponse;
 import com.example.SucceSS.domain.Member;
 import com.example.SucceSS.domain.MemberHobby;
+import com.example.SucceSS.domain.MemberDetailedHobby;
 import com.example.SucceSS.domain.enums.DetailedHobby;
 import com.example.SucceSS.domain.enums.Hobby;
 import com.example.SucceSS.domain.enums.PersonalityEnergy;
 import com.example.SucceSS.domain.enums.PersonalityJudgement;
+import com.example.SucceSS.repository.MemberDetailedHobbyRepository;
 import com.example.SucceSS.repository.MemberHobbyRepository;
 import com.example.SucceSS.repository.MemberRepository;
+import com.example.SucceSS.web.dto.MemberHobbyDto;
 import com.example.SucceSS.web.dto.MemberRequestDto;
 
 
+import com.example.SucceSS.web.dto.MemberResponseDto;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,41 +29,82 @@ import java.util.stream.Collectors;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberHobbyRepository memberHobbyRepository;
+    private final MemberDetailedHobbyRepository memberDetailedHobbyRepository;
 
-    public MemberService(MemberRepository memberRepository, MemberHobbyRepository memberHobbyRepository) {
+    public MemberService(MemberRepository memberRepository,
+                         MemberHobbyRepository memberHobbyRepository,
+                         MemberDetailedHobbyRepository memberDetailedHobbyRepository) {
         this.memberRepository = memberRepository;
         this.memberHobbyRepository = memberHobbyRepository;
+        this.memberDetailedHobbyRepository = memberDetailedHobbyRepository;
+    }
+
+    public ApiResponse<MemberResponseDto> getMemberResponse(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+
+        List<MemberHobbyDto> hobbyDtos = member.getMemberHobbies().stream()
+                .map(hobby -> new MemberHobbyDto(
+                        hobby.getHobby(),
+                        hobby.getDetailedHobbies().stream()
+                                .map(MemberDetailedHobby::getDetailedHobby)
+                                .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+
+        MemberResponseDto responseDto = new MemberResponseDto(
+                member.getId(),
+                member.getNickname(),
+                member.getAgeGroup(),
+                member.getLocation(),
+                member.getPersonalityEnergy(),
+                member.getPersonalityJudgement(),
+                hobbyDtos,
+                null
+        );
+
+        return ApiResponse.onSuccess(responseDto);
     }
 
     @Transactional
-    public Long updateMember(@PathVariable Long id, MemberRequestDto requestDto) {
-        Optional<Member> optionalMember = memberRepository.findById(id);
-
-        if (optionalMember.isEmpty()) {
-            throw new RuntimeException("회원 정보를 찾을 수 없습니다.");
-        }
-
-        Member member = optionalMember.get();
+    public ApiResponse<MemberResponseDto> updateMember(Long id, MemberRequestDto requestDto) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
 
         member.setAgeGroup(requestDto.getAgeGroup());
         member.setLocation(requestDto.getLocation());
         member.setPersonalityEnergy(requestDto.getPersonalityEnergy());
         member.setPersonalityJudgement(requestDto.getPersonalityJudgement());
 
-        // 기존 Hobby 데이터 삭제 후 새로 저장
         memberHobbyRepository.deleteByMember(member);
+
         List<MemberHobby> newHobbies = requestDto.getHobbies().stream()
-                .map(dto -> new MemberHobby(null, member, dto.getHobby(), dto.getDetailedHobby()))
+                .map(dto -> {
+                    MemberHobby hobby = new MemberHobby(null, member, dto.getHobby(), new ArrayList<>());
+                    List<MemberDetailedHobby> detailedHobbies = dto.getDetailedHobbies().stream()
+                            .map(detail -> new MemberDetailedHobby(null, hobby, detail))
+                            .collect(Collectors.toList());
+                    hobby.setDetailedHobbies(detailedHobbies);
+                    return hobby;
+                })
                 .collect(Collectors.toList());
 
         member.getMemberHobbies().clear();
         member.getMemberHobbies().addAll(newHobbies);
-
         memberHobbyRepository.saveAll(newHobbies);
-        return memberRepository.save(member).getId();
+
+        return getMemberResponse(id);
     }
 
-    public String generateAnalysisMessage(Long id) {
+    public ApiResponse<MemberResponseDto> generateMemberAnalysis(Long id) {
+        ApiResponse<MemberResponseDto> response = getMemberResponse(id);
+
+        MemberResponseDto responseDto = response.getResult();
+        responseDto.setMessage(generateAnalysisMessage(id));
+
+        return ApiResponse.onSuccess(responseDto);
+    }
+
+    private String generateAnalysisMessage(Long id) {
         Optional<Member> optionalProfile = memberRepository.findById(id);
 
         if (optionalProfile.isEmpty()) {
@@ -76,12 +122,11 @@ public class MemberService {
         }
 
         if (member.getPersonalityJudgement() == PersonalityJudgement.LOGICAL) {
-            message.append("특히 논리적인 사고를 바탕으로 결정을 내리시는 특징이 있습니다.\n\n");
+            message.append(" 특히 논리적인 사고를 바탕으로 결정을 내리시는 특징이 있습니다.\n\n");
         } else {
-            message.append("특히 사람들의 감정을 잘 이해하고 공감하는 성향이 강한 특징이 있습니다.\n\n");
+            message.append(" 특히 사람들의 감정을 잘 이해하고 공감하는 성향이 강한 특징이 있습니다.\n\n");
         }
 
-        // 변경된 Hobby, DetailedHobby 가져오는 코드
         message.append("취미로 ").append(member.getMemberHobbies().stream()
                         .map(MemberHobby::getHobby)
                         .distinct()
@@ -90,7 +135,8 @@ public class MemberService {
                 .append("에 관심이 있으시고, ");
 
         message.append("특히 ").append(member.getMemberHobbies().stream()
-                        .map(MemberHobby::getDetailedHobby)
+                        .flatMap(hobby -> hobby.getDetailedHobbies().stream())
+                        .map(MemberDetailedHobby::getDetailedHobby)
                         .distinct()
                         .map(DetailedHobby::getDescription)
                         .collect(Collectors.joining(", ")))
@@ -100,5 +146,4 @@ public class MemberService {
 
         return message.toString();
     }
-
 }

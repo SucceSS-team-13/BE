@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -27,7 +30,7 @@ public class MemberHobby {
     //@Column(nullable = false)
     private Hobby hobby;
 
-    @Enumerated(EnumType.STRING)
-    //@Column(nullable = false)
-    private DetailedHobby detailedHobby;
+    // MemberDetailedHobby와 1:N 관계
+    @OneToMany(mappedBy = "memberHobby", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberDetailedHobby> detailedHobbies = new ArrayList<>();
 }
