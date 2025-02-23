@@ -16,7 +16,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @PatchMapping("/profile/update/{id}")
+    @PatchMapping("/profile/update")
     public ResponseEntity<ApiResponse<MemberResponseDto>> updateMember(@RequestBody MemberRequestDto requestDto) {
         ApiResponse<MemberResponseDto> response = memberService.updateMember(requestDto);
         return ResponseEntity.ok(response);
