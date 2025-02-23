@@ -17,15 +17,15 @@ public class MemberController {
     }
 
     @PatchMapping("/profile/update/{id}")
-    public ResponseEntity<ApiResponse<MemberResponseDto>> updateMember(@PathVariable Long id, @RequestBody MemberRequestDto requestDto) {
-        ApiResponse<MemberResponseDto> response = memberService.updateMember(id, requestDto);
+    public ResponseEntity<ApiResponse<MemberResponseDto>> updateMember(@RequestBody MemberRequestDto requestDto) {
+        ApiResponse<MemberResponseDto> response = memberService.updateMember(requestDto);
         return ResponseEntity.ok(response);
     }
 
     // 사용자 정보 조회 및 결과 반환
-    @GetMapping("/profile/{id}")
-    public ResponseEntity<ApiResponse<MemberResponseDto>> getMemberAnalysis(@PathVariable Long id) {
-        ApiResponse<MemberResponseDto> response = memberService.generateMemberAnalysis(id);
+    @GetMapping("/profile")
+    public ResponseEntity<ApiResponse<MemberResponseDto>> getMemberAnalysis() {
+        ApiResponse<MemberResponseDto> response = memberService.generateMemberAnalysis();
         return ResponseEntity.ok(response);
     }
 }
