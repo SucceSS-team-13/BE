@@ -11,12 +11,15 @@ import com.example.SucceSS.domain.enums.PersonalityJudgement;
 import com.example.SucceSS.repository.MemberDetailedHobbyRepository;
 import com.example.SucceSS.repository.MemberHobbyRepository;
 import com.example.SucceSS.repository.MemberRepository;
+import com.example.SucceSS.utils.GetCurrentUser;
 import com.example.SucceSS.web.dto.MemberHobbyDto;
 import com.example.SucceSS.web.dto.MemberRequestDto;
 
 
 import com.example.SucceSS.web.dto.MemberResponseDto;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -25,18 +28,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberHobbyRepository memberHobbyRepository;
     private final MemberDetailedHobbyRepository memberDetailedHobbyRepository;
+    private final GetCurrentUser getCurrentUser;  // 추가
 
+    @Autowired
     public MemberService(MemberRepository memberRepository,
                          MemberHobbyRepository memberHobbyRepository,
-                         MemberDetailedHobbyRepository memberDetailedHobbyRepository) {
+                         MemberDetailedHobbyRepository memberDetailedHobbyRepository,
+                         GetCurrentUser getCurrentUser) {
         this.memberRepository = memberRepository;
         this.memberHobbyRepository = memberHobbyRepository;
         this.memberDetailedHobbyRepository = memberDetailedHobbyRepository;
+        this.getCurrentUser = getCurrentUser;
     }
 
     public ApiResponse<MemberResponseDto> getMemberResponse(Long id) {
@@ -66,7 +75,9 @@ public class MemberService {
     }
 
     @Transactional
-    public ApiResponse<MemberResponseDto> updateMember(Long id, MemberRequestDto requestDto) {
+    public ApiResponse<MemberResponseDto> updateMember(MemberRequestDto requestDto) {
+        Long id = getCurrentId();  // 현재 로그인한 회원 ID 가져오기
+
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
 
@@ -95,7 +106,12 @@ public class MemberService {
         return getMemberResponse(id);
     }
 
-    public ApiResponse<MemberResponseDto> generateMemberAnalysis(Long id) {
+    public Long getCurrentId() {
+        return getCurrentUser.getCurrentUser().getId();
+    }
+
+    public ApiResponse<MemberResponseDto> generateMemberAnalysis() {
+        Long id = getCurrentId();
         ApiResponse<MemberResponseDto> response = getMemberResponse(id);
 
         MemberResponseDto responseDto = response.getResult();
