@@ -1,10 +1,7 @@
 package com.example.SucceSS.service.ChatService;
 
 import com.example.SucceSS.apiPayload.exception.ChatRoomNotFound;
-import com.example.SucceSS.domain.Chat;
-import com.example.SucceSS.domain.ChatRoom;
-import com.example.SucceSS.domain.Member;
-import com.example.SucceSS.domain.MemberHobby;
+import com.example.SucceSS.domain.*;
 import com.example.SucceSS.domain.enums.PersonalityJudgement;
 import com.example.SucceSS.repository.ChatRepository;
 import com.example.SucceSS.repository.ChatRoomRepository;
@@ -113,11 +110,15 @@ public class ChatService {
 
         for (MemberHobby memberHobby : memberHobbies) {
             String hobbyDes = memberHobby.getHobby().getDescription();
-            String detailedHobbyDes = memberHobby.getDetailedHobby().getDescription();
-            if(!hobby.contains(hobbyDes))
+            if(!hobby.contains(hobbyDes)) {
                 hobby.add(hobbyDes);
-            if(!detailedHobby.contains(detailedHobbyDes))
-                detailedHobby.add(detailedHobbyDes);
+            }
+            List<MemberDetailedHobby> memberDetailedHobby = memberHobby.getDetailedHobbies();
+            for (MemberDetailedHobby detailHobby : memberDetailedHobby) {
+                String detailedHobbyDes = detailHobby.getDetailedHobby().getDescription();
+                if (!detailedHobby.contains(detailedHobbyDes))
+                    detailedHobby.add(detailedHobbyDes);
+            }
         }
 
         String energyDes = null;
