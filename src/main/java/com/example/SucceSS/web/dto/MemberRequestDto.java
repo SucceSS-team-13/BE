@@ -15,13 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberRequestDto {
-    @JsonProperty("ageGroup")
     private AgeGroup ageGroup;
-    @JsonProperty("location")
     private String location;
-    @JsonProperty("personalityEnergy")
     private PersonalityEnergy personalityEnergy;
-    @JsonProperty("personalityJudgement")
     private PersonalityJudgement personalityJudgement;
     private List<MemberHobbyDto> hobbies = new ArrayList<>();
 }
