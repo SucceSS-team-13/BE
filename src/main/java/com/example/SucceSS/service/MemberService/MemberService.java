@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 public class MemberService {
@@ -117,7 +116,9 @@ public class MemberService {
 
         member.getMemberHobbies().clear();
         member.getMemberHobbies().addAll(newHobbies);
+
         memberHobbyRepository.saveAll(newHobbies);
+        memberHobbyRepository.flush(); // 강제 반영
 
         return getMemberResponse(id);
     }
