@@ -75,7 +75,7 @@ public class ChatService {
     private static String getCleanResponse(JsonNode node) {
         String mode = node.get("mode").asText();
         String response = null;
-        if (mode.equals("recommend") || mode.equals("chat")) {
+        if (mode.equals("chat+recommend") || mode.equals("chat")) {
             node = node.get("response");
             if (node != null) {
                 response = node.asText().replace("\"", "").replace("<sys>", "").replace("</sys>", "").trim();
