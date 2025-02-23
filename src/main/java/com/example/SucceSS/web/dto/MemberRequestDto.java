@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -17,5 +18,5 @@ public class MemberRequestDto {
     private String location;
     private PersonalityEnergy personalityEnergy;
     private PersonalityJudgement personalityJudgement;
-    private List<MemberHobbyDto> hobbies;
+    private List<MemberHobbyDto> hobbies = new ArrayList<>();
 }

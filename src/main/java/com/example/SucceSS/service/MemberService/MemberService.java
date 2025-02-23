@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -88,10 +89,25 @@ public class MemberService {
 
         memberHobbyRepository.deleteByMember(member);
 
-        List<MemberHobby> newHobbies = requestDto.getHobbies().stream()
+        /*List<MemberHobby> newHobbies = requestDto.getHobbies().stream()
                 .map(dto -> {
                     MemberHobby hobby = new MemberHobby(null, member, dto.getHobby(), new ArrayList<>());
                     List<MemberDetailedHobby> detailedHobbies = dto.getDetailedHobbies().stream()
+                            .map(detail -> new MemberDetailedHobby(null, hobby, detail))
+                            .collect(Collectors.toList());
+                    hobby.setDetailedHobbies(detailedHobbies);
+                    return hobby;
+                })
+                .collect(Collectors.toList());*/
+
+        List<MemberHobby> newHobbies = Optional.ofNullable(requestDto.getHobbies())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(dto -> {
+                    MemberHobby hobby = new MemberHobby(null, member, dto.getHobby(), new ArrayList<>());
+                    List<MemberDetailedHobby> detailedHobbies = Optional.ofNullable(dto.getDetailedHobbies())
+                            .orElse(Collections.emptyList())
+                            .stream()
                             .map(detail -> new MemberDetailedHobby(null, hobby, detail))
                             .collect(Collectors.toList());
                     hobby.setDetailedHobbies(detailedHobbies);
