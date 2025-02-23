@@ -88,17 +88,6 @@ public class MemberService {
 
         memberHobbyRepository.deleteByMember(member);
 
-        /*List<MemberHobby> newHobbies = requestDto.getHobbies().stream()
-                .map(dto -> {
-                    MemberHobby hobby = new MemberHobby(null, member, dto.getHobby(), new ArrayList<>());
-                    List<MemberDetailedHobby> detailedHobbies = dto.getDetailedHobbies().stream()
-                            .map(detail -> new MemberDetailedHobby(null, hobby, detail))
-                            .collect(Collectors.toList());
-                    hobby.setDetailedHobbies(detailedHobbies);
-                    return hobby;
-                })
-                .collect(Collectors.toList());*/
-
         List<MemberHobby> newHobbies = Optional.ofNullable(requestDto.getHobbies())
                 .orElse(Collections.emptyList())
                 .stream()
@@ -118,7 +107,6 @@ public class MemberService {
         member.getMemberHobbies().addAll(newHobbies);
 
         memberHobbyRepository.saveAll(newHobbies);
-        memberHobbyRepository.flush(); // 강제 반영
 
         return getMemberResponse(id);
     }
