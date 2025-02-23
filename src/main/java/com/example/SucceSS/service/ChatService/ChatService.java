@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,8 @@ public class ChatService {
     private static final String USER = "user";
     private static final String LUMI = "lumi";
 
-    private static final String API_URL = "https://Chanjeans-vector.hf.space/chat_or_recommend";
+    @Value("${spring.huggingface.api.url}")
+    private String API_URL;
 
     @Transactional
     public ChatResponseDto userSendChat(ChatRequestDto chatDto, Member member) throws IOException {
