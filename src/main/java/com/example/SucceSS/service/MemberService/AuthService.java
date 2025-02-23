@@ -2,10 +2,11 @@ package com.example.SucceSS.service.MemberService;
 
 import com.example.SucceSS.config.security.JwtProvider;
 import com.example.SucceSS.domain.Member;
+import com.example.SucceSS.repository.MemberDetailedHobbyRepository;
+import com.example.SucceSS.repository.MemberHobbyRepository;
 import com.example.SucceSS.repository.MemberRepository;
 import com.example.SucceSS.web.dto.KakaoAccountDto;
 import com.example.SucceSS.web.dto.LoginResponseDto;
-import com.example.SucceSS.web.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,20 +24,18 @@ public class AuthService {
     private final KakaoService kakaoService;
     private final JwtProvider jwtProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final MemberHobbyRepository memberHobbyRepository;
 
     @Transactional
     public LoginResponseDto signIn(String code) {
         KakaoAccountDto userInfo = kakaoService.getUserInfo(code);
-        boolean[] isNewMember = { false };
-        Member member = memberRepository.findBySocialId(userInfo.getId().toString())
-                .orElseGet(() -> {
-                    isNewMember[0] = true;
-                    return saveMember(userInfo);
-                });
+        boolean[] isFirstLogin = { false };
+        Member member = findOrSaveMember(userInfo, isFirstLogin);
+        isFirstLogin[0] = !memberHobbyRepository.existsByMemberId(member.getId());
 
         Authentication authentication = setAuthentication(member.getSocialId(), "KAKAO");
 
-        LoginResponseDto loginResponseDto = isNewMember[0]
+        LoginResponseDto loginResponseDto = isFirstLogin[0]
                 ? new LoginResponseDto(true)
                 : new LoginResponseDto(false);
         loginResponseDto.setTokens(jwtProvider.generateToken(authentication));
@@ -60,5 +59,14 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
+
+    private Member findOrSaveMember(KakaoAccountDto userInfo, boolean[] isFirstLogin) {
+        return memberRepository.findBySocialId(userInfo.getId().toString())
+                .orElseGet(() -> {
+                    isFirstLogin[0] = true;
+                    return saveMember(userInfo);
+                });
+    }
+
 
 }

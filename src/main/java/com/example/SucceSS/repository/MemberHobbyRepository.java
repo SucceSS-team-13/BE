@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 @Repository
 public interface MemberHobbyRepository extends JpaRepository<MemberHobby, Long> {
     void deleteByMember(Member member);
+    boolean existsByMemberId(Long memberId);
 }
