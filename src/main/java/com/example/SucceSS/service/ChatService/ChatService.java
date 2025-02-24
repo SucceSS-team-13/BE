@@ -75,18 +75,42 @@ public class ChatService {
     private static String getCleanResponse(JsonNode node) {
         String mode = node.get("mode").asText();
         String response = null;
-        if (mode.equals("chat+recommend") || mode.equals("chat")) {
+
+        if (mode.equals("recommend_only")) {
             node = node.get("response");
             if (node != null) {
-                response = node.asText().replace("\"", "").replace("<sys>", "").replace("</sys>", "").trim();
-                if (mode.equals("chat")) {
-                    int lastIndex = response.lastIndexOf(".");
-                    if (lastIndex != -1) { response = response.substring(0, lastIndex + 1); }
-                }
+                return node.asText().replace("\"", "").replace("<sys>", "").replace("</sys>", "").trim();
+            }
+            else { return "no generated_text"; }
+        }
+
+        else if(mode.equals("chat+recommend")) {
+            JsonNode chat = node.get("response");
+            JsonNode recommend = node.get("recommendation_msg");
+            if (chat != null) {
+                response = chat.asText().replace("\"", "").replace("<sys>", "").replace("</sys>", "").trim();
+                int lastIndex = response.lastIndexOf(".");
+                if (lastIndex != -1) { response = response.substring(0, lastIndex + 1); }
+            }
+            else { return "no generated_text"; }
+            if (recommend != null) {
+                response = response + recommend.asText();
+            }
+            else { return "no generated_text"; }
+            return response;
+        }
+
+        else if(mode.equals("chat")) {
+            JsonNode jsonNode = node.get("response");
+            if (jsonNode != null) {
+                response = jsonNode.asText().replace("\"", "").replace("<sys>", "").replace("</sys>", "").trim();
+                int lastIndex = response.lastIndexOf(".");
+                if (lastIndex != -1) { response = response.substring(0, lastIndex + 1); }
                 return response;
             }
             else { return "no generated_text"; }
         }
+
         else { return "Error: 잘못된 응답 모드입니다."; }
     }
 
