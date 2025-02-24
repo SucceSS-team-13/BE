@@ -5,7 +5,7 @@ public enum Hobby {
     TRAVEL("여행"),
     READING("독서"),
     CRAFT("공예"),
-    GAMING("게임"),
+    GAMES("게임"),
     MOVIES("영화");
 
     private final String description;
