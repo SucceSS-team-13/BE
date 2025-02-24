@@ -27,7 +27,7 @@ public enum DetailedHobby {
 
     // 독서 세부 취미
     NOVEL("소설", HobbyCategory.READING),
-    poem("시집", HobbyCategory.READING),
+    POEM("시집", HobbyCategory.READING),
     ESSAY("에세이 도서", HobbyCategory.READING),
     SELF_DEVELOPMENT("자기계발 도서", HobbyCategory.READING),
     HUMANITY("인문 도서", HobbyCategory.READING),
@@ -54,7 +54,7 @@ public enum DetailedHobby {
     ACTION_GAME("액션 게임", HobbyCategory.GAMES),
     STRATEGY("전략 게임", HobbyCategory.GAMES),
     SIMULATION("시뮬레이션 게임", HobbyCategory.GAMES),
-    SPROTS_GAME("스포츠 게임", HobbyCategory.GAMES),
+    SPORTS_GAME("스포츠 게임", HobbyCategory.GAMES),
     PUZZLE("퍼즐 게임", HobbyCategory.GAMES),
     RHYTHM("음악/리듬 게임", HobbyCategory.GAMES),
     CARD("카드 게임", HobbyCategory.GAMES),
@@ -63,7 +63,7 @@ public enum DetailedHobby {
     // 공예 세부 취미
     KNITTING("뜨개질", HobbyCategory.CRAFT),
     EMBROIDERY("자수 놓기", HobbyCategory.CRAFT),
-    XERAMIC("도자기", HobbyCategory.CRAFT),
+    CERAMIC("도자기", HobbyCategory.CRAFT),
     LEATHER_CRAFT("가죽공예", HobbyCategory.CRAFT),
     WOOD_CRAFT("목공예", HobbyCategory.CRAFT),
     BEADS_CRAFT("비즈공예", HobbyCategory.CRAFT),
