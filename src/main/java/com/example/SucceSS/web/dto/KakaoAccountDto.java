@@ -40,7 +40,7 @@ public class KakaoAccountDto {
             @JsonProperty("nickname")
             public String nickName;
 
-            @JsonProperty("profileImageURL")
+            @JsonProperty("profile_image_url")
             public String profileImgUrl;
         }
 

@@ -30,14 +30,13 @@ public class AuthService {
     @Transactional
     public LoginResponseDto signIn(String code) {
         KakaoAccountDto userInfo = kakaoService.getUserInfo(code);
-        boolean[] isFirstLogin = { false };
-        Member member = findOrSaveMember(userInfo, isFirstLogin);
-        // 첫 로그인이 아닌 경우, 프로필의 변경사항 업데이트
+        Member member = findOrSaveMember(userInfo);
+        // 첫 로그인이 아닌 경우에도 프로필의 변경사항 업데이트
         member.updateProfile(userInfo);
 
-        isFirstLogin[0] = !memberHobbyRepository.existsByMemberId(member.getId());
+        boolean isFirstLogin = !memberHobbyRepository.existsByMemberId(member.getId());
 
-        return LoginResponseDto.of(isFirstLogin[0], setAuthenticationAndGetTokens(member.getSocialId()), member);
+        return LoginResponseDto.of(isFirstLogin, setAuthenticationAndGetTokens(member.getSocialId()), member);
     }
 
     private TokenDto setAuthenticationAndGetTokens(String socialId) {
@@ -63,10 +62,9 @@ public class AuthService {
         return authentication;
     }
 
-    private Member findOrSaveMember(KakaoAccountDto userInfo, boolean[] isFirstLogin) {
+    private Member findOrSaveMember(KakaoAccountDto userInfo) {
         return memberRepository.findBySocialId(userInfo.getId().toString())
                 .orElseGet(() -> {
-                    isFirstLogin[0] = true;
                     return saveMember(userInfo);
                 });
     }
