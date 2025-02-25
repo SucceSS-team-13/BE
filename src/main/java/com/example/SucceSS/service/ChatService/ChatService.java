@@ -33,6 +33,7 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private static final String USER = "user";
     private static final String LUMI = "lumi";
+    private final ChatRoomService chatRoomService;
 
     @Value("${spring.huggingface.api.url}")
     private String API_URL;
@@ -160,5 +161,8 @@ public class ChatService {
             chatRoom.updateChatRoomTitle(chatDto.getText());
         }
         chatRoom.setUpdatedDate(LocalDateTime.now());
+
+        // 삭제 스케줄링 취소
+        chatRoomService.cancelScheduledDeletion(chatRoom.getChatRoomId());
     }
 }
