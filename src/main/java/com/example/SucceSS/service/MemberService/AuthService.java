@@ -7,6 +7,7 @@ import com.example.SucceSS.repository.MemberHobbyRepository;
 import com.example.SucceSS.repository.MemberRepository;
 import com.example.SucceSS.web.dto.KakaoAccountDto;
 import com.example.SucceSS.web.dto.LoginResponseDto;
+import com.example.SucceSS.web.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,15 +32,17 @@ public class AuthService {
         KakaoAccountDto userInfo = kakaoService.getUserInfo(code);
         boolean[] isFirstLogin = { false };
         Member member = findOrSaveMember(userInfo, isFirstLogin);
+        // 첫 로그인이 아닌 경우, 프로필의 변경사항 업데이트
+        member.updateProfile(userInfo);
+
         isFirstLogin[0] = !memberHobbyRepository.existsByMemberId(member.getId());
 
-        Authentication authentication = setAuthentication(member.getSocialId(), "KAKAO");
+        return LoginResponseDto.of(isFirstLogin[0], setAuthenticationAndGetTokens(member.getSocialId()), member);
+    }
 
-        LoginResponseDto loginResponseDto = isFirstLogin[0]
-                ? new LoginResponseDto(true)
-                : new LoginResponseDto(false);
-        loginResponseDto.setTokens(jwtProvider.generateToken(authentication));
-        return loginResponseDto;
+    private TokenDto setAuthenticationAndGetTokens(String socialId) {
+        Authentication authentication = setAuthentication(socialId, "KAKAO");
+        return jwtProvider.generateToken(authentication);
     }
 
     @Transactional
