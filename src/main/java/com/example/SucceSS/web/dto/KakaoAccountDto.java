@@ -39,6 +39,9 @@ public class KakaoAccountDto {
             //닉네임
             @JsonProperty("nickname")
             public String nickName;
+
+            @JsonProperty("profile_image_url")
+            public String profileImgUrl;
         }
 
     }
@@ -47,6 +50,7 @@ public class KakaoAccountDto {
         return Member.builder()
                 .socialId(dto.getId().toString())
                 .nickname(dto.getKakaoAccount().getProfile().getNickName())
+                .profileImgUrl(dto.getKakaoAccount().getProfile().getProfileImgUrl())
                 .userRole(Role.ROLE_USER)
                 .build();
     }

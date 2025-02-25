@@ -7,6 +7,7 @@ import com.example.SucceSS.repository.MemberHobbyRepository;
 import com.example.SucceSS.repository.MemberRepository;
 import com.example.SucceSS.web.dto.KakaoAccountDto;
 import com.example.SucceSS.web.dto.LoginResponseDto;
+import com.example.SucceSS.web.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,17 +30,18 @@ public class AuthService {
     @Transactional
     public LoginResponseDto signIn(String code) {
         KakaoAccountDto userInfo = kakaoService.getUserInfo(code);
-        boolean[] isFirstLogin = { false };
-        Member member = findOrSaveMember(userInfo, isFirstLogin);
-        isFirstLogin[0] = !memberHobbyRepository.existsByMemberId(member.getId());
+        Member member = findOrSaveMember(userInfo);
+        // 첫 로그인이 아닌 경우에도 프로필의 변경사항 업데이트
+        member.updateProfile(userInfo);
 
-        Authentication authentication = setAuthentication(member.getSocialId(), "KAKAO");
+        boolean isFirstLogin = !memberHobbyRepository.existsByMemberId(member.getId());
 
-        LoginResponseDto loginResponseDto = isFirstLogin[0]
-                ? new LoginResponseDto(true)
-                : new LoginResponseDto(false);
-        loginResponseDto.setTokens(jwtProvider.generateToken(authentication));
-        return loginResponseDto;
+        return LoginResponseDto.of(isFirstLogin, setAuthenticationAndGetTokens(member.getSocialId()), member);
+    }
+
+    private TokenDto setAuthenticationAndGetTokens(String socialId) {
+        Authentication authentication = setAuthentication(socialId, "KAKAO");
+        return jwtProvider.generateToken(authentication);
     }
 
     @Transactional
@@ -60,10 +62,9 @@ public class AuthService {
         return authentication;
     }
 
-    private Member findOrSaveMember(KakaoAccountDto userInfo, boolean[] isFirstLogin) {
+    private Member findOrSaveMember(KakaoAccountDto userInfo) {
         return memberRepository.findBySocialId(userInfo.getId().toString())
                 .orElseGet(() -> {
-                    isFirstLogin[0] = true;
                     return saveMember(userInfo);
                 });
     }

@@ -3,6 +3,7 @@ package com.example.SucceSS.domain;
 import com.example.SucceSS.domain.common.BaseEntity;
 import com.example.SucceSS.domain.common.Role;
 import com.example.SucceSS.domain.enums.*;
+import com.example.SucceSS.web.dto.KakaoAccountDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -29,6 +30,9 @@ public class Member extends BaseEntity {
     @Column(name = "nickname")
     private String nickname;
 
+    @Column(name="profileImgUrl")
+    private String profileImgUrl;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name="user_role")
@@ -47,5 +51,10 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberHobby> memberHobbies = new ArrayList<>();
+
+    public void updateProfile(KakaoAccountDto userInfo) {
+        this.nickname = userInfo.getKakaoAccount().getProfile().getNickName();
+        this.profileImgUrl = userInfo.getKakaoAccount().getProfile().getProfileImgUrl();
+    }
 
 }
