@@ -57,9 +57,10 @@ public class ChatRoomService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ChatRoomResponseDto> getChatRoomPages(Member member, Pageable pageable) {
-        return chatRoomRepository.getPagesByMemberId(member.getId()
-                , getChatRoomPageableWithSort(pageable));
+    public Page<ChatRoomResponseDto> getChatRoomPages(Member member, Pageable pageable, String keyword) {
+        Pageable sortedPageable = getChatRoomPageableWithSort(pageable);
+        return keyword == null ? chatRoomRepository.getPagesByMemberId(member.getId(),sortedPageable )
+                : chatRoomRepository.getPagesByMemberIdAndSort(member.getId(),sortedPageable, keyword);
     }
 
     private Pageable getChatRoomPageableWithSort(Pageable pageable) {

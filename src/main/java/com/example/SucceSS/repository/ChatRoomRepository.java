@@ -18,5 +18,11 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
             "WHERE c.memberId = :memberId")
     Page<ChatRoomResponseDto> getPagesByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 
+    @Query("SELECT new com.example.SucceSS.web.dto.ChatRoomResponseDto(c.chatRoomId, c.memberId, c.title, c.updatedAt) " +
+            "FROM ChatRoom c " +
+            "WHERE c.memberId = :memberId " +
+            "AND c.title LIKE CONCAT('%', :keyword, '%')")
+    Page<ChatRoomResponseDto> getPagesByMemberIdAndSort(@Param("memberId") Long memberId, Pageable pageable,@Param("keyword") String keyword);
+
     Optional<ChatRoom> findByChatRoomId(Long chatRoomId);
 }
