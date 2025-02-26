@@ -118,14 +118,14 @@ public class ChatService {
     private static String createPayload(Member member, String message) throws JsonProcessingException {
         // AI 모델에 전달할 userProfile 생성
         ObjectMapper objectMapper = new ObjectMapper();
-        String mode = null;
-        String modeDes = null;
+        String mode = "emotion";
+        String modeDes = "감정형";
         if (member.getPersonalityJudgement() == PersonalityJudgement.EMOTIONAL) {
             mode = "emotion";
-            modeDes = "이성형"; }
+            modeDes = "감정형"; }
         else if (member.getPersonalityJudgement() == PersonalityJudgement.LOGICAL) {
             mode = "rational";
-            modeDes = "감정형"; }
+            modeDes = "이성형"; }
         else
             log.error("잘못된 감정 형식입니다.");
 
@@ -146,7 +146,7 @@ public class ChatService {
             }
         }
 
-        String energyDes = null;
+        String energyDes = "내향형";
         if (member.getPersonalityEnergy() != null)
             energyDes = member.getPersonalityEnergy().getDescription() + "형";
         else { log.error("잘못된 에너지 형식입니다."); }
