@@ -53,9 +53,10 @@ public class ChatController {
 
     @GetMapping(value = "/rooms")
     @Operation(summary = "채팅방 목록 불러오기")
-    public ResponseEntity<ApiResponse<Page<ChatRoomResponseDto>>> getChatRoomPages(Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<ChatRoomResponseDto>>> getChatRoomPages(Pageable pageable
+            , @RequestParam(required = false, name = "keyword") String keyword) {
         return ResponseEntity.ok(
-                ApiResponse.onSuccess(chatRoomService.getChatRoomPages(getCurrentUser.getCurrentUser(), pageable)));
+                ApiResponse.onSuccess(chatRoomService.getChatRoomPages(getCurrentUser.getCurrentUser(), pageable, keyword)));
     }
 
 
