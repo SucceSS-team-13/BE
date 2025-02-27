@@ -24,7 +24,8 @@ public class SecurityConfig {
             "/error",
             "/api/auth/reissue",
             "/ws-chat/**",
-            "/.well-known/acme-challenge/**" // SSL 인증을 위한 예외 추가
+            "/.well-known/acme-challenge/**", // SSL 인증을 위한 예외 추가
+            "/health"
     };
     private static final String[] SWAGGER_WHITELIST = {
             "/swagger-ui/**", "/v3/api-docs/**"
